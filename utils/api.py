@@ -1,5 +1,3 @@
-import requests
-
 from utils.http_methods import HTTP_methods
 
 
