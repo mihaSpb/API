@@ -20,3 +20,21 @@ class TestCreateTest():
         assert place_id, (f"'place_id' is empty or None")
 
         print(f"Test is OK, place_id = {place_id}")
+
+        print('Method GET')
+        result_get: Response = Google_maps_api.get_new_place(place_id)
+        assert result_get.status_code == 200, (f"Expected status code 200, but came {result_get.status_code}")
+
+        check_get = result_get.json()
+        assert isinstance(check_get, dict), (f"Expected dict type, but came {type(check_get)}")
+
+        for field in ["address", "name", "language", "location"]:
+            assert field in check_get, (f"No '{field}' field in the response")
+
+        assert check_get["name"] == "Frontline house", (f"Expected 'Frontline house' but got {check_get['name']}")
+        assert check_get["address"] == "29, side layout, cohen 09", (f"Expected '29, side layout, cohen 09' but got"
+                                                                     f" {check_get['address']}")
+        assert check_get["language"] == "French-IN", (f"Expected 'French-IN' but got {check_get['language']}")
+
+        print("GET method check passed successfully")
+
