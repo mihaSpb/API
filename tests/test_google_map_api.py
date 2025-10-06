@@ -2,7 +2,7 @@ from requests import Response
 from utils.api import Google_maps_api
 
 
-class TestCreateTest():
+class TestCreateTest:
     def test_create_new_place(self):
         print('Method POST')
         result_post: Response = Google_maps_api.create_new_place()
@@ -50,8 +50,8 @@ class TestCreateTest():
 
         # Проаерка, что адрес обновлён
         result_get: Response = Google_maps_api.get_new_place(place_id)
-        assert result_get.status_code == 200, f"GET expected 200, got {result_get.status_code}"
-        assert isinstance(result_get.json(), dict), f"GET response is not dict: {type(result_get.json())}"
+        assert result_get.status_code == 200, (f"GET expected 200, got {result_get.status_code}")
+        assert isinstance(result_get.json(), dict), (f"GET response is not dict: {type(result_get.json())}")
 
         expected_address = "89 Vernadskogo street,RU"
         actual_address = result_get.json().get("address")
