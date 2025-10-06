@@ -21,7 +21,7 @@ class TestCreateTest():
 
         print(f"Test is OK, place_id = {place_id}")
 
-        print('Method GET')
+        print('Method GET: positive')
         result_get: Response = Google_maps_api.get_new_place(place_id)
         assert result_get.status_code == 200, (f"Expected status code 200, but came {result_get.status_code}")
 
@@ -37,4 +37,49 @@ class TestCreateTest():
         assert check_get["language"] == "French-IN", (f"Expected 'French-IN' but got {check_get['language']}")
 
         print("GET method check passed successfully")
+
+        print('Method PUT')
+        result_put: Response = Google_maps_api.put_new_place(place_id)
+        assert result_put.status_code == 200, (f"PUT expected 200, got {result_put.status_code}")
+
+        expected_put_msg = "Address successfully updated"
+        actual_put_msg = result_put.json().get("msg")
+        assert actual_put_msg == expected_put_msg, (
+            f"PUT msg mismatch: expected {expected_put_msg!r}, got {actual_put_msg!r}"
+        )
+
+        # Проаерка, что адрес обновлён
+        result_get: Response = Google_maps_api.get_new_place(place_id)
+        assert result_get.status_code == 200, f"GET expected 200, got {result_get.status_code}"
+        assert isinstance(result_get.json(), dict), f"GET response is not dict: {type(result_get.json())}"
+
+        expected_address = "89 Vernadskogo street,RU"
+        actual_address = result_get.json().get("address")
+        assert actual_address == expected_address, (
+            f"Address not updated correctly: expected {expected_address!r}, got {actual_address!r}"
+        )
+
+        print("Positive PUT method check passed successfully")
+
+        print('Method GET: negative')
+        fake_place_id = "this_place_id_does_not_exist_12345"
+        result_put: Response = Google_maps_api.put_new_place(fake_place_id)
+        # Ожидаем 404
+        assert result_put.status_code == 404, (f"PUT expected 404 for non-existing id, got {result_put.status_code}")
+
+        expected_error = "Update address operation failed, looks like the data doesn't exists"
+        actual_error = result_put.json().get("msg")
+        assert actual_error == expected_error, (
+            f"PUT(not found) msg mismatch: expected {expected_error!r}, got {actual_error!r}"
+        )
+
+        print("PUT negative flow verified: 404 and error msg OK")
+
+
+
+
+
+
+
+
 
