@@ -44,8 +44,7 @@ class TestCreateTest:
 
         expected_put_msg = "Address successfully updated"
         actual_put_msg = result_put.json().get("msg")
-        assert actual_put_msg == expected_put_msg, (f"PUT msg mismatch: expected {expected_put_msg!r},"
-                                                    f"got {actual_put_msg!r}")
+        assert actual_put_msg == expected_put_msg, f"Expected PUT msg: {expected_put_msg!r}, got {actual_put_msg!r}"
 
         # Проаерка, что адрес обновлён
         result_get: Response = Google_maps_api.get_new_place(place_id)
@@ -68,8 +67,7 @@ class TestCreateTest:
 
         expected_error = "Update address operation failed, looks like the data doesn't exists"
         actual_error = result_put.json().get("msg")
-        assert actual_error == expected_error, (f"PUT(not found) msg mismatch: expected {expected_error!r},"
-                                                f"got {actual_error!r}")
+        assert actual_error == expected_error, f"PUT msg mismatch: expected {expected_error!r}, got {actual_error!r}"
 
         print("PUT negative flow verified: 404 and error msg OK")
 
