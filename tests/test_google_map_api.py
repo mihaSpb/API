@@ -71,11 +71,15 @@ class TestCreateTest:
 
         print("PUT negative flow verified: 404 and error msg OK")
 
+        print('Method DELETE')
+        result_delete: Response = Google_maps_api.delete_new_place(place_id)
+        assert result_delete.status_code == 200, f"Delete expected 200, but came {result_delete.status_code}"
 
+        result_delete: Response = Google_maps_api.delete_new_place(place_id)
+        assert result_delete.status_code == 404, f"Re-DELETE expected 404, got {result_delete.status_code}"
+        expected_msg = "Delete operation failed, looks like the data doesn't exists"
+        actual_msg = result_delete.json().get("msg")
+        print(actual_msg)
+        assert actual_msg == expected_msg, f"Re-DELETE msg mismatch: expected {expected_msg!r}, got {actual_msg!r}"
 
-
-
-
-
-
-
+        print("DELETE success flow verified: status OK and re-DELETE returns 404 + expected msg")
