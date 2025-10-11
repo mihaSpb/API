@@ -1,7 +1,7 @@
 import requests
 
 
-class HTTP_methods:
+class HTTP_methods():
     headers = {'Content-Type': 'application/json'}
     cookie = ""
 

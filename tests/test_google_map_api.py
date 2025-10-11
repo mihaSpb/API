@@ -1,4 +1,5 @@
 from requests import Response
+from utils.checking import Checking
 from utils.api import Google_maps_api
 
 
@@ -6,7 +7,7 @@ class TestCreateTest:
     def test_create_new_place(self):
         print('Method POST')
         result_post: Response = Google_maps_api.create_new_place()
-        assert result_post.status_code == 200, f"Expected status code 200, but came {result_post.status_code}"
+        Checking.check_status_code(result_post, 200)
 
         check_post = result_post.json()
         assert isinstance(check_post, dict), f"Expected dict type, but came {type(check_post)}"
@@ -23,7 +24,7 @@ class TestCreateTest:
 
         print('Method GET: positive')
         result_get: Response = Google_maps_api.get_new_place(place_id)
-        assert result_get.status_code == 200, f"Expected status code 200, but came {result_get.status_code}"
+        Checking.check_status_code(result_get, 200)
 
         check_get = result_get.json()
         assert isinstance(check_get, dict), f"Expected dict type, but came {type(check_get)}"
@@ -40,7 +41,7 @@ class TestCreateTest:
 
         print('Method PUT')
         result_put: Response = Google_maps_api.put_new_place(place_id)
-        assert result_put.status_code == 200, f"PUT expected 200, got {result_put.status_code}"
+        Checking.check_status_code(result_put, 200)
 
         expected_put_msg = "Address successfully updated"
         actual_put_msg = result_put.json().get("msg")
@@ -48,7 +49,7 @@ class TestCreateTest:
 
         # Проаерка, что адрес обновлён
         result_get: Response = Google_maps_api.get_new_place(place_id)
-        assert result_get.status_code == 200, f"GET expected 200, got {result_get.status_code}"
+        Checking.check_status_code(result_get, 200)
         assert isinstance(result_get.json(), dict), f"GET response is not dict: {type(result_get.json())}"
 
         expected_address = "89 Vernadskogo street,RU"
@@ -63,7 +64,7 @@ class TestCreateTest:
         fake_place_id = "this_place_id_does_not_exist_12345"
         result_put: Response = Google_maps_api.put_new_place(fake_place_id)
         # Ожидаем 404
-        assert result_put.status_code == 404, f"PUT expected 404 for non-existing id, got {result_put.status_code}"
+        Checking.check_status_code(result_put, 404)
 
         expected_error = "Update address operation failed, looks like the data doesn't exists"
         actual_error = result_put.json().get("msg")
@@ -73,10 +74,10 @@ class TestCreateTest:
 
         print('Method DELETE')
         result_delete: Response = Google_maps_api.delete_new_place(place_id)
-        assert result_delete.status_code == 200, f"Delete expected 200, but came {result_delete.status_code}"
+        Checking.check_status_code(result_delete, 200)
 
         result_delete: Response = Google_maps_api.delete_new_place(place_id)
-        assert result_delete.status_code == 404, f"Re-DELETE expected 404, got {result_delete.status_code}"
+        Checking.check_status_code(result_delete, 404)
         expected_msg = "Delete operation failed, looks like the data doesn't exists"
         actual_msg = result_delete.json().get("msg")
         print(actual_msg)
